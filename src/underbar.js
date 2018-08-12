@@ -116,8 +116,8 @@
         }
       });
       for (var key in calledValues) {
-        if (!calledValues.hasOwnProperty(calledValues[key])) {
-          acc.push(calledValues[key]);
+        //if (!calledValues.hasOwnProperty(calledValues[key])) {
+        //  acc.push(calledValues[key]);
       }
     }
     return acc;
