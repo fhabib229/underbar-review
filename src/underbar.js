@@ -102,22 +102,25 @@
     var iteratedArr = [];
     if (!isSorted) {
       _.each(array, function(value) {
-        if (calledValues[value] === undefined) {
-          calledValues[value] = value;
+        if (!acc.includes(value)) {
+          acc.push(value);
         }
+        return acc;
       });
-      for (var key in calledValues) {
-        acc.push(calledValues[key]);
-      }
     } else {
+      var truthy = 0;
+      var falsy = 0;
       _.each(array, function(value) {
-        if (calledValues[value] === undefined) {
-          calledValues[value] = value;
-        }
+        calledValues[value] = iterator(value);
       });
       for (var key in calledValues) {
-        //if (!calledValues.hasOwnProperty(calledValues[key])) {
-        //  acc.push(calledValues[key]);
+        if (calledValues[key] === true && truthy === 0) {
+          acc.push(JSON.parse(key));
+          truthy++;
+        } else if (calledValues[key] === false && falsy === 0) {
+          acc.push(JSON.parse(key));
+          falsy++;
+        }
       }
     }
     return acc;
@@ -129,6 +132,17 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    let acc = [];
+    if (Array.isArray(collection)) {
+      _.each(collection, (value) => {
+        acc.push(iterator(value));
+      });
+    } else if (!Array.isArray(collection)) {
+      for (var key in collection) {
+        collection[key] = iterator(collection[key]);
+      }
+    }
+    return acc;
   };
 
   /*
@@ -153,7 +167,7 @@
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
   //
-  // You can pass in a starting value for the accumulator as the third argument
+  // You can pass in   a starting value for the accumulator as the third argument
   // to reduce. If no starting value is passed, the first element is used as
   // the accumulator, and is never passed to the iterator. In other words, in
   // the case where a starting value is not passed, the iterator is not invoked
@@ -170,6 +184,25 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    // takes in arrays and objects
+
+    // if Array
+    // iterate through array pass in accumlator and element into iterator function
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+      collection = collection.slice(1);
+    }
+    if (Array.isArray(collection)) {
+      _.each(collection, (value) => {
+        accumulator = iterator(accumulator, value);
+      });
+    } else if (!Array.isArray(collection)) {
+      for (var key in collection) {
+        accumulator = iterator(accumulator, collection[key]);
+      }
+    }
+
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).

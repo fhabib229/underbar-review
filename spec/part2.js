@@ -56,12 +56,12 @@
       });
 
       it('should return false given an array and a value not in that array', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        var array = [1, 2, 3, 4];
+        var value = 5;
+        expect(_.contains(array, value)).to.be.false;
       });
 
-      it('should return true given a object and a value from that object', function() {
+      it('should return true given an object and a value from that object', function() {
         var object = { a: 1, b: 2, c: 3 };
         var value = 1;
         expect(_.contains(object, value)).to.be.true;
@@ -413,7 +413,7 @@
         memoSpy(10);
         expect(spy).to.have.been.calledOnce;
       });
-      
+
       it('should not run the memoized function twice when given a reference type as an argument', function() {
         // Be careful how you are checking if a set of arguments has been passed in already
         var spy = sinon.spy(function() { return 'Dummy output'; });
