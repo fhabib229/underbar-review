@@ -89,9 +89,7 @@
       });
 
       it('fails for a collection of all-falsy values', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        expect(_.every([false, null, 0], _.identity)).to.be.false;
       });
 
       it('fails for a collection containing mixed falsy and truthy values', function() {
@@ -149,7 +147,8 @@
       it('should fail for a set containing no matching values', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+//TODO: fill in test here!
+        expect(_.some([1, 3, 5], isEven)).to.be.false;
       });
 
       it('should pass for a collection containing one matching value', function() {
@@ -187,9 +186,11 @@
       });
 
       it('should override properties found on the destination', function() {
-        // Replace this line with an `expect` statement that tests
-        // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        var destination = {a: 'Heart'};
+        var source = {a: 'Desires'};
+        var extended = _.extend(destination, source);
+
+        expect(extended.a).to.equal('Desires');
       });
 
       it('should not override properties not found in the source', function() {
@@ -267,7 +268,10 @@
       it('should copy any property whose key is not already set on the target', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        var destination = {a: 'super duper'};
+        var source = {b: 'whatever you want'};
+        _.defaults(destination, source);
+        expect(destination.b).to.equal('whatever you want');
       });
 
       it('should not copy a property if that key is already set on the target', function() {

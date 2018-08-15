@@ -220,13 +220,54 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+    // reduce (collection, some function(memo, next), true)
+    //Check if memo is false
+    //if false, return false
+    //Check if iterator(next) is true
+    //if true, return true
+    //return false
+
+    return _.reduce(collection, function(memo, next){
+      if (memo === false) {
+        return false;
+      } else if (iterator) {
+        if (iterator(next)) {
+          return true;
+        }
+      } else {
+        if (next) {
+          return true;
+        }
+      }
+      return false;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
+    // if one element passes the truth test, return true
+    // use every to find if all values are true, means some values are true
+    // if mix of truth and falsy values, use _.reduce to iterate through collection
+    // take in collection, function, and accumulator
+    // set accumulator to false to start, because if one is true, we return true
+    // if no callback is provided
+    // if next === true return true;
+
+    var allTrue = _.every(collection, iterator);
+    if (allTrue && collection.length > 0) {
+      return true;
+    }
+    return _.reduce(collection, (memo, next) => {
+      if (iterator) {
+        if (iterator(next)) {
+          return true;
+        }
+      } else if (collection.includes(true)) {
+        return true;
+      }
+      return memo;
+    }, false);
   };
 
 
@@ -249,11 +290,33 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    // create an array of arguments, exclude the first element
+    //Look through each element in arguments array
+    //For each object
+    //set key:value pair on object that equals the argument
+
+    var args = Array.prototype.slice.call(arguments);
+    args.slice(1, args.length);
+    _.each(args, function(arg) {
+      for (var key in arg) {
+        obj[key] = arg[key];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+
+    for (var i = 1; i < arguments.length; ++i) {
+      for (var key in arguments[i]) {
+        if (!obj.hasOwnProperty(key)) {
+          obj[key] = arguments[i][key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -297,6 +360,15 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var result = {};
+    return function() {
+      var args = JSON.stringify(arguments);
+
+      if (result[args] === undefined) {
+        result[args] = func.apply(this, arguments);
+      }
+      return result[args];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -306,6 +378,12 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    // wait for given number of ms
+    // run function
+    let result;
+
+    result = func.apply(this, arguments);
+    return setTimeout(result, wait);
   };
 
 
